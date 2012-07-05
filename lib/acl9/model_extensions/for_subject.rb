@@ -145,17 +145,14 @@ module Acl9
 
         cond = case object
                when Class
-                 [ 'name = ? and authorizable_type = ? and authorizable_id IS NULL', role_name, object.to_s ]
+                 {:name => role_name, :authorizable_type => object.to_s, :authorizable_id => nil}
                when nil
-                 [ 'name = ? and authorizable_type IS NULL and authorizable_id IS NULL', role_name ]
+                 {:name => role_name, :authorizable_type => nil, :authorizable_id => nil}
                else
-                 [
-                   'name = ? and authorizable_type = ? and authorizable_id = ?',
-                   role_name, object.class.base_class.to_s, object.id
-                 ]
+                 {:name => role_name, :authorizable_type => object.class.base_class.to_s, :authorizable_id => object.id}
                end
 
-        self._auth_role_class.first :conditions => cond
+        self._auth_role_class.where(cond).first
       end
 
       def delete_role(role)
