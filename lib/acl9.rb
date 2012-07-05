@@ -6,7 +6,7 @@ require 'acl9/railtie'
 
 module Acl9
   def self.config
-    Rails.config.acl9
+    Rails.application.config.acl9
   end
 end
 
